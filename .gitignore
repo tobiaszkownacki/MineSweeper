@@ -5,3 +5,11 @@
 /.vs
 /Saper/.vs/Saper/v17
 /Saper/.vs/Saper/FileContentIndex
+/MineSweeper/.vs
+/MineSweeper/ConsoleApp/x64
+/MineSweeper/MinesweeperLogicalLib/x64/Debug
+/MineSweeper/MineswepperInterfaceUnitTests/x64/Debug
+/MineSweeper/MineswepperLogicalLibUnitTests/x64/Debug
+/MineSweeper/packages/Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7
+/MineSweeper/x64/Debug
+/MineSweeper/x64/Release
