@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/ConsoleApp/x64/Debug
+/MinesweeperLogicalLib/x64/Debug
+/MineswepperInterfaceUnitTests/x64/Debug
+/MineswepperLogicalLibUnitTests/x64/Debug
+/packages/Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7
+/x64/Debug
