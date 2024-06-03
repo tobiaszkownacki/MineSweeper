@@ -3,12 +3,12 @@
 
 Board::Board(int width, int height, int mines) noexcept
 {
-	InitializeBoard();
+	InitializeBoard(width, height, mines);
 	GenerateMines();
 	CalculateAdjacentMines();
 }
 
-void Board::InitializeBoard() noexcept
+void Board::InitializeBoard(int width, int height, int mines) noexcept
 {
 	this->width = width;
 	this->height = height;
@@ -113,12 +113,12 @@ bool Board::isGameWon() noexcept
 	return gameWon;
 }
 
-Field& Board::getField(int x, int y) noexcept
+Field& Board::getField(int y, int x) noexcept
 {
 	return fields[y][x];
 }
 
-void Board::RevealField(int x, int y) noexcept
+void Board::RevealField(int y, int x) noexcept
 {
 	if (fields[y][x].IsFlagged() || fields[y][x].IsRevealed())
 		return;
@@ -134,13 +134,13 @@ void Board::RevealField(int x, int y) noexcept
 	++revealedFields;
 
 	if (fields[y][x].getAdjacentMines() == 0)
-		RevealAdjacentFields(x, y);
+		RevealAdjacentFields(y, x);
 
 	if (revealedFields == width * height - mines)
 		gameWon = true;
 }
 
-void Board::RevealAdjacentFields(int x, int y) noexcept
+void Board::RevealAdjacentFields(int y, int x) noexcept
 {
 	// Calculate the range of neighboring cells
 	int topY = std::max(0, y - 1);
@@ -159,14 +159,14 @@ void Board::RevealAdjacentFields(int x, int y) noexcept
 			++revealedFields;
 
 			if (fields[i][j].getAdjacentMines() == 0)
-				RevealAdjacentFields(j, i);
+				RevealAdjacentFields(i, j);
 		}
 	}
 }
 
-void Board::ToggleFlag(int x, int y) noexcept
+void Board::ToggleFlag(int y, int x) noexcept
 {
-	if (fields[y][x].IsRevealed())
+	if (fields[y][x].IsRevealed() or flagsLeft == 0)
 		return;
 
 	fields[y][x].ToggleFlag();

@@ -4,7 +4,7 @@
 
 class Board
 {
-private:
+protected:
 	int width;
 	int height;
 	int mines;
@@ -15,10 +15,11 @@ private:
 
 	std::vector<std::vector<Field>> fields;
 
-	void InitializeBoard() noexcept;
+	void InitializeBoard(int width, int height, int mines) noexcept;
 	void GenerateMines() noexcept;	
 	void CalculateAdjacentMines() noexcept;
-	void RevealAdjacentFields(int x, int y) noexcept;
+	void RevealAdjacentFields(int y, int x) noexcept;
+	void RevealBombs() noexcept;
 
 public:
 	Board(int width, int height, int mines) noexcept;
@@ -33,12 +34,10 @@ public:
 	bool isGameLost() noexcept;
 	bool isGameWon() noexcept;
 
-	Field& getField(int x, int y) noexcept;
+	Field& getField(int y, int x) noexcept;
 
-	void RevealField(int x, int y) noexcept;
-	void ToggleFlag(int x, int y) noexcept;
-
-	void RevealBombs() noexcept;
+	void RevealField(int y, int x) noexcept;
+	void ToggleFlag(int y, int x) noexcept;
 
 };
 
