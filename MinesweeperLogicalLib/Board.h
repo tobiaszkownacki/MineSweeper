@@ -15,10 +15,10 @@ private:
 
 	std::vector<std::vector<Field>> fields;
 
-	void initializeBoard() noexcept;
-	void generateMines() noexcept;	
-	void calculateAdjacentMines() noexcept;
-	void revealAdjacentFields(int x, int y) noexcept;
+	void InitializeBoard() noexcept;
+	void GenerateMines() noexcept;	
+	void CalculateAdjacentMines() noexcept;
+	void RevealAdjacentFields(int x, int y) noexcept;
 
 public:
 	Board(int width, int height, int mines) noexcept;
@@ -35,10 +35,10 @@ public:
 
 	Field& getField(int x, int y) noexcept;
 
-	void revealField(int x, int y) noexcept;
-	void toggleFlag(int x, int y) noexcept;
+	void RevealField(int x, int y) noexcept;
+	void ToggleFlag(int x, int y) noexcept;
 
-	void revealAllFields() noexcept;
+	void RevealBombs() noexcept;
 
 };
 
