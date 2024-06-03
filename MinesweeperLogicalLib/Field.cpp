@@ -36,7 +36,7 @@ bool Field::IsRevealed() const noexcept
 
 void Field::Reveal() noexcept
 {
-	if (isRevealed = false) {
+	if (isRevealed == false) {
 		isRevealed = true;
 	}
 }
