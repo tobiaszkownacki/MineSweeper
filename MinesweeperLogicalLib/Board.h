@@ -15,6 +15,7 @@ private:
 
 	std::vector<std::vector<Field>> fields;
 
+	void initializeBoard() noexcept;
 	void generateMines() noexcept;	
 	void calculateAdjacentMines() noexcept;
 	void revealAdjacentFields(int x, int y) noexcept;

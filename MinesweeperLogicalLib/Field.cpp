@@ -50,3 +50,8 @@ void Field::setAdjacentMines(int mines) noexcept
 {
 	adjacentMines = mines;
 }
+
+void Field::incrementAdjacentMines() noexcept
+{
+	++adjacentMines;
+}

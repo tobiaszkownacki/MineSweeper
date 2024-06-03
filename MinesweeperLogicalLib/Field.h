@@ -16,6 +16,8 @@ class Field
 
 		int getAdjacentMines() noexcept;
 		void setAdjacentMines(int mines) noexcept;
+		void incrementAdjacentMines() noexcept;
+
 	private:
 		bool isMine;
 		bool isFlagged;
