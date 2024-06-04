@@ -36,7 +36,7 @@ bool Field::IsRevealed() const noexcept
 
 void Field::Reveal() noexcept
 {
-	if (isRevealed = false) {
+	if (isRevealed == false) {
 		isRevealed = true;
 	}
 }
@@ -49,4 +49,9 @@ int Field::getAdjacentMines() noexcept
 void Field::setAdjacentMines(int mines) noexcept
 {
 	adjacentMines = mines;
+}
+
+void Field::incrementAdjacentMines() noexcept
+{
+	++adjacentMines;
 }
