@@ -3,13 +3,6 @@
 
 Board::Board(int width, int height, int mines) noexcept
 {
-	InitializeBoard(width, height, mines);
-	GenerateMines();
-	CalculateAdjacentMines();
-}
-
-void Board::InitializeBoard(int width, int height, int mines) noexcept
-{
 	this->width = width;
 	this->height = height;
 	this->mines = mines;
@@ -20,11 +13,8 @@ void Board::InitializeBoard(int width, int height, int mines) noexcept
 
 	fields = std::vector<std::vector<Field>>(height, std::vector<Field>(width));
 
-	for (int y = 0; y < height; ++y)
-	{
-		for (int x = 0; x < width; ++x)
-			fields[y][x] = Field();
-	}
+	GenerateMines();
+	CalculateAdjacentMines();
 }
 
 void Board::GenerateMines() noexcept
@@ -77,38 +67,38 @@ void Board::CalculateAdjacentMines() noexcept
 	}
 }
 
-int Board::getWidth() noexcept
+int Board::getWidth() const noexcept
 {
 	return width;
 }
 
-int Board::getHeight() noexcept
+int Board::getHeight() const noexcept
 {
 	return height;
 }
 
-int Board::getMines() noexcept
+int Board::getMines() const noexcept
 {
 	return mines;
 }
 
 
-int Board::getRevealedFields() noexcept
+int Board::getRevealedFields() const noexcept
 {
 	return revealedFields;
 }
 
-int Board::getFlagsLeft() noexcept
+int Board::getFlagsLeft() const noexcept
 {
 	return flagsLeft;
 }
 
-bool Board::isGameLost() noexcept
+bool Board::isGameLost() const noexcept
 {
 	return gameLost;
 }
 
-bool Board::isGameWon() noexcept
+bool Board::isGameWon() const noexcept
 {
 	return gameWon;
 }
@@ -155,6 +145,15 @@ void Board::RevealAdjacentFields(int y, int x) noexcept
 			if (fields[i][j].IsRevealed())
 				continue;
 
+			// unflag the field if it has no adjacent mines
+			if (fields[i][j].IsFlagged() && fields[i][j].getAdjacentMines() == 0)
+			{
+				fields[i][j].ToggleFlag();
+				++flagsLeft;
+			}
+			else if (fields[i][j].IsFlagged())
+				continue;
+
 			fields[i][j].Reveal();
 			++revealedFields;
 
@@ -166,7 +165,10 @@ void Board::RevealAdjacentFields(int y, int x) noexcept
 
 void Board::ToggleFlag(int y, int x) noexcept
 {
-	if (fields[y][x].IsRevealed() or flagsLeft == 0)
+	if (fields[y][x].IsRevealed())
+		return;
+
+	if (flagsLeft == 0 && !fields[y][x].IsFlagged())
 		return;
 
 	fields[y][x].ToggleFlag();

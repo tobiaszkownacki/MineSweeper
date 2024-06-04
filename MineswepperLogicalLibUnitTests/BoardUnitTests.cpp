@@ -21,9 +21,17 @@ public:
     MockBoard(int width, int height, int mines, std::vector<std::vector<bool>> wherebomb) noexcept 
 		: Board(width, height, mines)
     {
-					InitializeBoard(width, height, mines);  // to zero out the fields
-					GenerateMines(wherebomb);
-					CalculateAdjacentMines();
+		// make all fields deafult
+		for (int y = 0; y < height; ++y)
+		{
+			for (int x = 0; x < width; ++x)
+			{
+				fields[y][x] = Field();
+			}
+		}
+
+		GenerateMines(wherebomb);
+		CalculateAdjacentMines();
     }
 };
 
@@ -182,6 +190,25 @@ namespace MockBoardUnitTest
 		EXPECT_EQ(0, board.getFlagsLeft());
 	}
 
+	TEST(ToggleFlag, tryToUnclickFlagWhenLeftFlagsEqualZero)
+	{
+		std::vector<std::vector<bool>> wherebomb = {
+			{false, false, false},
+			{false, true, false},
+			{true, false, false}
+		};
+		MockBoard board(3, 3, 2, wherebomb);
+
+		EXPECT_EQ(2, board.getFlagsLeft());
+		board.ToggleFlag(0, 0);
+		EXPECT_EQ(1, board.getFlagsLeft());
+		board.ToggleFlag(0, 1);
+		EXPECT_EQ(0, board.getFlagsLeft());
+
+		board.ToggleFlag(0, 1);
+		EXPECT_EQ(1, board.getFlagsLeft());
+
+	}
 	TEST(RevealField, revealBombGameOver)
 	{
 		std::vector<std::vector<bool>> wherebomb = {
@@ -223,7 +250,38 @@ namespace MockBoardUnitTest
 		EXPECT_TRUE(board.isGameWon());
 	}
 
-	TEST(RevealField, RevealAdjacentFields)
+	TEST(RevealField, WinTheGameFlagBombsFirst)
+	{
+		std::vector<std::vector<bool>> wherebomb = {
+			{false, false, false},
+			{false, true, false},
+			{false, true, false}
+		};
+		MockBoard board(3, 3, 2, wherebomb);
+
+		EXPECT_FALSE(board.isGameWon());
+
+		board.ToggleFlag(1, 1);
+		board.ToggleFlag(2, 1);
+
+		EXPECT_FALSE(board.isGameWon());
+		board.RevealField(0, 0);
+		EXPECT_FALSE(board.isGameWon());
+		board.RevealField(0, 1);
+		EXPECT_FALSE(board.isGameWon());
+		board.RevealField(0, 2);
+		EXPECT_FALSE(board.isGameWon());
+		board.RevealField(1, 0);
+		EXPECT_FALSE(board.isGameWon());
+		board.RevealField(1, 2);
+		EXPECT_FALSE(board.isGameWon());
+		board.RevealField(2, 0);
+		EXPECT_FALSE(board.isGameWon());
+		board.RevealField(2, 2);
+		EXPECT_TRUE(board.isGameWon());
+	}
+
+	TEST(RevealAdjacentFields, typical)
 	{
 		std::vector<std::vector<bool>> wherebomb = {
 			{false, false, false},
@@ -250,7 +308,7 @@ namespace MockBoardUnitTest
 		EXPECT_TRUE(board.isGameWon());
 	}
 
-	TEST(RevealField, RevealAdjacentFieldsTwoTimes)
+	TEST(RevealAdjacentFields, RevealTwoTimes)
 	{
 		std::vector<std::vector<bool>> wherebomb = {
 			{false, false, false, false},
@@ -277,6 +335,64 @@ namespace MockBoardUnitTest
 		EXPECT_TRUE(board.getField(1, 1).IsRevealed());
 		EXPECT_TRUE(board.getField(2, 0).IsRevealed());
 		EXPECT_TRUE(board.getField(2, 1).IsRevealed());
+	}
+
+	TEST(RevealAdjacentFields, FlagIsNotZeroFieldAndIsNeighbourZeroField)
+	{
+		std::vector<std::vector<bool>> wherebomb = {
+			{false, false, false},
+			{false, false, false},
+			{false, true, false}
+		};
+
+		MockBoard board(3, 3, 1, wherebomb);
+
+		board.ToggleFlag(1, 2);
+		EXPECT_TRUE(board.getField(1, 2).IsFlagged());
+		EXPECT_EQ(0, board.getFlagsLeft());
+
+		board.RevealField(0, 0);
+		EXPECT_EQ(5, board.getRevealedFields());
+		EXPECT_TRUE(board.getField(0, 0).IsRevealed());
+		EXPECT_TRUE(board.getField(0, 1).IsRevealed());
+		EXPECT_TRUE(board.getField(0, 2).IsRevealed());
+		EXPECT_TRUE(board.getField(1, 0).IsRevealed());
+		EXPECT_TRUE(board.getField(1, 1).IsRevealed());
+		EXPECT_FALSE(board.getField(1, 2).IsRevealed());
+
+		EXPECT_TRUE(board.getField(1, 2).IsFlagged());
+		EXPECT_EQ(0, board.getFlagsLeft());
+	}
+
+	TEST(RevealAdjacentFields, FlagIsZeroField)
+	{
+		std::vector<std::vector<bool>> wherebomb = {
+			{false, false, false},
+			{false, false, false},
+			{false, true, false}
+		};
+
+		MockBoard board(3, 3, 1, wherebomb);
+
+		board.ToggleFlag(0, 1);
+		EXPECT_TRUE(board.getField(0, 1).IsFlagged());
+		EXPECT_EQ(0, board.getFlagsLeft());
+
+		board.RevealField(0, 0);
+		EXPECT_EQ(6, board.getRevealedFields());
+
+		EXPECT_TRUE(board.getField(0, 0).IsRevealed());
+		EXPECT_TRUE(board.getField(0, 1).IsRevealed());
+		EXPECT_TRUE(board.getField(0, 2).IsRevealed());
+		EXPECT_TRUE(board.getField(1, 0).IsRevealed());
+		EXPECT_TRUE(board.getField(1, 1).IsRevealed());
+		EXPECT_TRUE(board.getField(1, 2).IsRevealed());
+		EXPECT_FALSE(board.getField(2, 0).IsRevealed());
+		EXPECT_FALSE(board.getField(2, 1).IsRevealed());
+		EXPECT_FALSE(board.getField(2, 2).IsRevealed());
+
+		EXPECT_FALSE(board.getField(0, 1).IsFlagged());
+		EXPECT_EQ(1, board.getFlagsLeft());
 	}
 
 
