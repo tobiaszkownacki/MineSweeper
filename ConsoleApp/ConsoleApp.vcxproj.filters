@@ -24,7 +24,7 @@
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MenuElement.cpp">
+    <ClCompile Include="CustomSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClInclude Include="Menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MenuElement.h">
+    <ClInclude Include="CustomSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
