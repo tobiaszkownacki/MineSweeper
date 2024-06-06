@@ -1,6 +1,14 @@
 #include "gtest/gtest.h"
+#include "../ConsoleApp/Menu.h"
 
-TEST(Sample4, Test1)
+namespace MenuUnitTests
 {
-	EXPECT_EQ(1, 1);
+	TEST(Constructor, deafult)
+	{
+
+
+
+		Menu menu(800, 600);
+		EXPECT_EQ(menu.GetPressedItem(), 0);
+	}
 }
