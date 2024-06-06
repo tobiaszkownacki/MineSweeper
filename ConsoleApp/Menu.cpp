@@ -1,34 +1,38 @@
 #include "Menu.h"
 #include <iostream>
 
-Menu::Menu(float width, float height)
+Menu::Menu(float width, float height) noexcept
 {
 	if (!font.loadFromFile("../arial.ttf"))
 	{
 		std::cerr << "Error loading font\n";
 	}
-	title.setFont(font);
-	title.setFillColor(sf::Color::Black);
-	title.setString("Select the difficulty");
-	title.setCharacterSize(48);
-	sf::FloatRect titleRect = title.getLocalBounds();
-	title.setOrigin(titleRect.left + titleRect.width / 2.0f, titleRect.top + titleRect.height / 2.0f);
-	title.setPosition(sf::Vector2f(width / 2.0f, height / 10.0f));
+	initializeText(title, "Select the difficulty", 48, sf::Color::Black, sf::Vector2f(width / 2.0f, height / 10.0f));
 	std::vector<std::string> menuItems = { "Easy", "Medium", "Extreme", "Custom" };
-	for (int i = 0; i < menuItems.size(); ++i)
+	for (size_t i = 0; i < menuItems.size(); ++i)
 	{
 		sf::Text text;
-		text.setFont(font);
-		text.setFillColor(i == 0 ? sf::Color::Red : sf::Color::Black);
-		text.setString(menuItems[i]);
-		text.setCharacterSize(48);
-		text.setPosition(sf::Vector2f(width / 10.0f, height / (menuItems.size() + 1) * (i + 1)));
+		initializeText(text, menuItems[i], 48, (i == 0) ? sf::Color::Red : sf::Color::Black, { width / 10.0f, height / (menuItems.size() + 1) * (i + 1) });
 		menuOptions.push_back(text);
 	}
 	selectedItemIndex = 0;
 }
 
-void Menu::draw(sf::RenderWindow &window)
+void Menu::initializeText(sf::Text& text, const std::string& str, int size, sf::Color color, sf::Vector2f position) const noexcept
+{
+	text.setFont(font);
+	text.setString(str);
+	text.setCharacterSize(size);
+	text.setFillColor(color);
+	if (str == "Select the difficulty")
+	{
+		sf::FloatRect titleRect = text.getLocalBounds();
+		text.setOrigin(titleRect.left + titleRect.width / 2.0f, titleRect.top + titleRect.height / 2.0f);
+	}
+	text.setPosition(position);
+}
+
+void Menu::draw(sf::RenderWindow &window) noexcept
 {
 	window.draw(title);
 	for (const auto &text : menuOptions)
@@ -37,22 +41,23 @@ void Menu::draw(sf::RenderWindow &window)
 	}
 }
 
-void Menu::handleInput(sf::Event event)
+void Menu::handleInput(sf::Event event) noexcept
 {
 	if (event.type == sf::Event::KeyPressed)
 	{
-		if (event.key.code == sf::Keyboard::Up)
+		switch (event.key.code)
 		{
-			MoveUp();
-		}
-		if (event.key.code == sf::Keyboard::Down)
-		{
-			MoveDown();
+			case sf::Keyboard::Up:
+				MoveUp();
+				break;
+			case sf::Keyboard::Down:
+				MoveDown();
+				break;
 		}
 	}
 }
 
-void Menu::MoveUp()
+void Menu::MoveUp() noexcept
 {
 	if (selectedItemIndex - 1 >= 0)
 	{
@@ -62,7 +67,7 @@ void Menu::MoveUp()
 	}
 }
 
-void Menu::MoveDown()
+void Menu::MoveDown() noexcept
 {
 	if (selectedItemIndex + 1 < menuOptions.size())
 	{
@@ -72,7 +77,7 @@ void Menu::MoveDown()
 	}
 }
 
-int Menu::GetPressedItem() const
+int Menu::GetPressedItem() const noexcept
 {
 	return selectedItemIndex;
 }

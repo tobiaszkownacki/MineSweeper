@@ -31,38 +31,34 @@ int main()
                     if (event.type == sf::Event::KeyPressed)
                     {
                         menu.handleInput(event);
-                        if (event.type == sf::Event::KeyPressed)
+                        switch (event.key.code)
                         {
-                            if (event.key.code == sf::Keyboard::Enter)
-                            {
+                            case sf::Keyboard::Enter:
                                 int selectedItem = menu.GetPressedItem();
-                                if (selectedItem == 0)
+                                switch (selectedItem)
                                 {
-                                    std::cout << "Easy | Width: 9 | Height: 9 | Bombs: 10" << std::endl;
-                                    // TODO game = new Game(9, 9, 10);
-                                    // TODO currentState = GameState::Game;
+                                    case 0:
+										std::cout << "Easy | Width: 9 | Height: 9 | Bombs: 10" << std::endl;
+										// TODO game = new Game(9, 9, 10);
+										// TODO currentState = GameState::Game;
+										break;
+                                    case 1:
+                                        std::cout << "Medium | Width: 16 | Height: 16 | Bombs: 40" << std::endl;
+                                        // TODO game = new Game(16, 16, 40);
+                                        // TODO currentState = GameState::Game;
+                                        break;
+                                    case 2:
+                                        std::cout << "Extreme | Width: 30 | Height: 16 | Bombs: 99" << std::endl;
+										// TODO game = new Game(30, 16, 99);
+										// TODO currentState = GameState::Game;
+                                        break;
+                                    case 3:
+                                        currentState = GameState::CustomSettings;
+										break;
                                 }
-                                if (selectedItem == 1)
-                                {
-                                    std::cout << "Medium | Width: 16 | Height: 16 | Bombs: 40" << std::endl;
-                                    // TODO game = new Game(16, 16, 40);
-                                    // TODO currentState = GameState::Game;
-                                }
-                                if (selectedItem == 2)
-                                {
-                                    std::cout << "Extreme | Width: 30 | Height: 16 | Bombs: 99" << std::endl;
-                                    // TODO game = new Game(30, 16, 99);
-                                    // TODO currentState = GameState::Game;
-                                }
-                                if (selectedItem == 3)
-                                {
-                                    currentState = GameState::CustomSettings;
-                                }
-                            }
-                            if (event.key.code == sf::Keyboard::Escape)
-							{
+                            case sf::Keyboard::Escape:
 								window.close();
-							}
+								break;
                         }
                     }
                     break;
@@ -70,25 +66,26 @@ int main()
                     customSettings.handleInput(event);
                     if (event.type == sf::Event::KeyPressed)
                     {
-                        if (event.key.code == sf::Keyboard::Enter)
+                        switch (event.key.code)
                         {
-                            int customWidth = customSettings.getWidth();
-                            int customHeight = customSettings.getHeight();
-                            int customMines = customSettings.getMines();
-                            if (customMines < customWidth * customHeight)
-                            {
-                                std::cout << "Custom | Width: " << customWidth << " | Height: " << customHeight << " | Bombs: " << customMines << std::endl;
-                                // TODO game = new Game(customWidth, customHeight, customMines);
-                                // TODO currentState = GameState::Game;
-                            }
-                            else
-                            {
-                                customSettings.setErrorMessage("Error: Number of mines must be less than the total number of cells.");
-                            }
-                        }
-                        if (event.key.code == sf::Keyboard::Escape)
-                        {
-                            currentState = GameState::Menu;
+                            case sf::Keyboard::Enter:
+                                int customWidth = customSettings.getWidth();
+                                int customHeight = customSettings.getHeight();
+                                int customMines = customSettings.getMines();
+                                if (customMines < customWidth * customHeight)
+                                {
+                                    std::cout << "Custom | Width: " << customWidth << " | Height: " << customHeight << " | Bombs: " << customMines << std::endl;
+                                    // TODO game = new Game(customWidth, customHeight, customMines);
+                                    // TODO currentState = GameState::Game;
+                                }
+                                else
+                                {
+                                    customSettings.setErrorMessage("Error: Number of mines must be less than the total number of cells.");
+                                }
+                                break;
+                            case sf::Keyboard::Escape:
+                                currentState = GameState::Menu;
+                                break;
                         }
                     }
 					break;
