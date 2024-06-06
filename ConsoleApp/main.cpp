@@ -1,6 +1,5 @@
-#include <SFML/Graphics.hpp>
-#include "Menu.h"
-#include "CustomSettings.h"
+#include "../MineswepperMenuLibrary/Menu.h"
+#include "../MineswepperMenuLibrary/CustomSettings.h"
 #include <iostream>
 
 enum class GameState {

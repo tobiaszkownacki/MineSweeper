@@ -124,17 +124,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleApp\ConsoleApp.vcxproj">
-      <Project>{f22cfb2f-7484-43b6-85bd-0a896d240907}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\ConsoleApp\Menu.cpp" />
     <ClCompile Include="GameUnitTestscpp.cpp" />
     <ClCompile Include="MenuUnitTests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MineswepperMenuLibrary\MineswepperMenuLibrary.vcxproj">
+      <Project>{80ccbf52-412b-4342-a814-4c0ff2fd0c1d}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
