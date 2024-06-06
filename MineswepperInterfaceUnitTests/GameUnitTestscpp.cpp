@@ -1,6 +1,9 @@
 #include "gtest/gtest.h"
 
-TEST(Sample3, Test1)
+namespace GameUnitTests
 {
-	EXPECT_EQ(1, 1);
+	TEST(Sample1, Test1)
+	{
+		EXPECT_EQ(1, 1);
+	}
 }
