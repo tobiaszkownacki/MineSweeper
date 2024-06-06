@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../MineswepperMenuLibrary/CustomSettings.h"
+#include "../MineswepperInterfaceLibrary/CustomSettings.h"
 
 namespace CustomSettingsUnitTests
 {

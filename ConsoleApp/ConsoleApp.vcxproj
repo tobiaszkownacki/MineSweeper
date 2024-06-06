@@ -158,7 +158,10 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MineswepperMenuLibrary\MineswepperMenuLibrary.vcxproj">
+    <ProjectReference Include="..\MinesweeperLogicalLib\MinesweeperLogicalLib.vcxproj">
+      <Project>{7fcbccdc-2aa9-46a5-9dc1-07ab8108e580}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\MineswepperInterfaceLibrary\MineswepperMenuLibrary.vcxproj">
       <Project>{80ccbf52-412b-4342-a814-4c0ff2fd0c1d}</Project>
     </ProjectReference>
   </ItemGroup>

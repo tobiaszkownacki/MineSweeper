@@ -132,7 +132,7 @@
     <ClCompile Include="MenuUnitTests.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MineswepperMenuLibrary\MineswepperMenuLibrary.vcxproj">
+    <ProjectReference Include="..\MineswepperInterfaceLibrary\MineswepperMenuLibrary.vcxproj">
       <Project>{80ccbf52-412b-4342-a814-4c0ff2fd0c1d}</Project>
     </ProjectReference>
   </ItemGroup>
