@@ -34,28 +34,31 @@ int main()
                         switch (event.key.code)
                         {
                             case sf::Keyboard::Enter:
+                            {
                                 int selectedItem = menu.GetPressedItem();
                                 switch (selectedItem)
                                 {
-                                    case 0:
-										std::cout << "Easy | Width: 9 | Height: 9 | Bombs: 10" << std::endl;
-										// TODO game = new Game(9, 9, 10);
-										// TODO currentState = GameState::Game;
-										break;
-                                    case 1:
-                                        std::cout << "Medium | Width: 16 | Height: 16 | Bombs: 40" << std::endl;
-                                        // TODO game = new Game(16, 16, 40);
-                                        // TODO currentState = GameState::Game;
-                                        break;
-                                    case 2:
-                                        std::cout << "Extreme | Width: 30 | Height: 16 | Bombs: 99" << std::endl;
-										// TODO game = new Game(30, 16, 99);
-										// TODO currentState = GameState::Game;
-                                        break;
-                                    case 3:
-                                        currentState = GameState::CustomSettings;
-										break;
+                                case 0:
+                                    std::cout << "Easy | Width: 9 | Height: 9 | Bombs: 10" << std::endl;
+                                    // TODO game = new Game(9, 9, 10);
+                                    // TODO currentState = GameState::Game;
+                                    break;
+                                case 1:
+                                    std::cout << "Medium | Width: 16 | Height: 16 | Bombs: 40" << std::endl;
+                                    // TODO game = new Game(16, 16, 40);
+                                    // TODO currentState = GameState::Game;
+                                    break;
+                                case 2:
+                                    std::cout << "Extreme | Width: 30 | Height: 16 | Bombs: 99" << std::endl;
+                                    // TODO game = new Game(30, 16, 99);
+                                    // TODO currentState = GameState::Game;
+                                    break;
+                                case 3:
+                                    currentState = GameState::CustomSettings;
+                                    break;
                                 }
+                                break;
+                            }  
                             case sf::Keyboard::Escape:
 								window.close();
 								break;
@@ -69,6 +72,7 @@ int main()
                         switch (event.key.code)
                         {
                             case sf::Keyboard::Enter:
+                            {
                                 int customWidth = customSettings.getWidth();
                                 int customHeight = customSettings.getHeight();
                                 int customMines = customSettings.getMines();
@@ -83,6 +87,7 @@ int main()
                                     customSettings.setErrorMessage("Error: Number of mines must be less than the total number of cells.");
                                 }
                                 break;
+                            }
                             case sf::Keyboard::Escape:
                                 currentState = GameState::Menu;
                                 break;
