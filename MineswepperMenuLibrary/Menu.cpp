@@ -59,7 +59,7 @@ void Menu::handleInput(sf::Event event) noexcept
 
 void Menu::MoveUp() noexcept
 {
-	if (selectedItemIndex - 1 >= 0)
+	if (selectedItemIndex > 0)
 	{
 		menuOptions[selectedItemIndex].setFillColor(sf::Color::Black);
 		selectedItemIndex--;

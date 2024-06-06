@@ -127,6 +127,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CustomSettingsUnitTests.cpp" />
     <ClCompile Include="GameUnitTestscpp.cpp" />
     <ClCompile Include="MenuUnitTests.cpp" />
   </ItemGroup>
