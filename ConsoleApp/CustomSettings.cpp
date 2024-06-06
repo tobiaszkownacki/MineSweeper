@@ -46,8 +46,9 @@ void CustomSettings::draw(sf::RenderWindow& window) noexcept
 	window.draw(widthText);
 	window.draw(heightText);
 	window.draw(minesText);
-	if (errorMessage.getString().isEmpty())
+	if (width * height <= mines)
 	{
+		errorMessage.setString("Error: Number of mines must be less than the total number of cells.");
 		window.draw(errorMessage);
 	}
 }

@@ -82,10 +82,6 @@ int main()
                                     // TODO game = new Game(customWidth, customHeight, customMines);
                                     // TODO currentState = GameState::Game;
                                 }
-                                else
-                                {
-                                    customSettings.setErrorMessage("Error: Number of mines must be less than the total number of cells.");
-                                }
                                 break;
                             }
                             case sf::Keyboard::Escape:
