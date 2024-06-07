@@ -157,7 +157,8 @@ void Game::gameOver(int y, int x)
 
 void Game::wonGame(int y, int x)
 {
-	// TODO
+	sprites[y][x].setTexture(textures[board.getField(y, x).getAdjacentMines()]);
+	board.RevealField(y, x);
 	std::cerr << "Game Won\n";
 
 }
@@ -171,4 +172,14 @@ void Game::draw()
 			window.draw(sprites[i][j]);
 		}
 	}
+}
+
+bool Game::isGameOver() const noexcept
+{
+	return board.isGameLost();
+}
+
+bool Game::isGameWon() const noexcept
+{
+	return board.isGameWon();
 }

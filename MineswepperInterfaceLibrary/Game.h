@@ -11,6 +11,8 @@ public:
 	//void initializeText(sf::Text& text, const std::string& str, int size, sf::Color color, sf::Vector2f position) const noexcept;
 	void handleMouseEvent(sf::Event event);
 	void draw();
+	bool isGameOver() const noexcept;
+	bool isGameWon() const noexcept;
 
 private:
 	int width;

@@ -92,7 +92,8 @@ int main()
                     }
 					break;
                 case GameState::Game:
-                    game->handleMouseEvent(event);
+                    if(!(game->isGameOver() || game->isGameWon()))
+                        game->handleMouseEvent(event);
 					if (event.type == sf::Event::KeyPressed)
 					{
 						switch (event.key.code)
