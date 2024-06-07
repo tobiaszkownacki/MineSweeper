@@ -9,7 +9,7 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 		std::cerr << "Error loading font\n";
 	}
 
-	textures.resize(13);
+	textures.resize(14);
 	if(!textures[0].loadFromFile("../images/zeroMinesNeighbour.png"))
 		std::cerr << "Error loading texture zero\n";
 	if (!textures[1].loadFromFile("../images/oneMineNeighbour.png"))
@@ -36,6 +36,8 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 		std::cerr << "Error loading texture mine\n";
 	if (!textures[12].loadFromFile("../images/flagMistake.png"))
 		std::cerr << "Error loading texture flagMistake\n";
+	if (!textures[13].loadFromFile("../images/clickedMine.png"))
+		std::cerr << "Error loading texture clickedMine.png\n";
 
 	windowWidth = static_cast<float>(width * 40);
 	windowHeight = static_cast<float>(100 + height * 40);
@@ -93,13 +95,13 @@ void Game::leftClick(int y, int x)
 
 	if (board.isGameWon())
 	{
-		wonGame();
+		wonGame(y, x);
 		return;
 	}
 		
 	else if (board.isGameLost())
 	{
-		gameOver();
+		gameOver(y, x);
 		return;
 	}
 
@@ -134,10 +136,8 @@ void Game::rightClick(int y, int x)
 }
 
 
-void Game::gameOver()
+void Game::gameOver(int y, int x)
 {
-	std::cerr<< "Game Over\n";
-
 	// Reveal all mines and show mistakes
 	for (int i = 0; i < height; ++i)
 	{
@@ -150,9 +150,12 @@ void Game::gameOver()
 				sprites[i][j].setTexture(textures[12]);
 		}
 	}
+
+	// Show clicked incorrect mine
+	sprites[y][x].setTexture(textures[13]);
 }
 
-void Game::wonGame()
+void Game::wonGame(int y, int x)
 {
 	// TODO
 	std::cerr << "Game Won\n";

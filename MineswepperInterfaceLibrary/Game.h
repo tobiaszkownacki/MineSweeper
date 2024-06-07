@@ -22,8 +22,8 @@ private:
 	void leftClick(int y, int x);
 	void rightClick(int y, int x);
 
-	void gameOver();
-	void wonGame();
+	void gameOver(int y, int x);
+	void wonGame(int y, int x);
 
 	sf::RenderWindow& window;
 	Board board;
