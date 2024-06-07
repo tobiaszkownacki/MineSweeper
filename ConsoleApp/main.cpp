@@ -15,7 +15,6 @@ int main()
     Menu menu(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y));
     CustomSettings customSettings(window.getSize().x, window.getSize().y);
     Game * game = nullptr;
-
     GameState currentState = GameState::Menu;
     sf::Color backgroundColor = sf::Color(237, 232, 215);
     while (window.isOpen())
@@ -25,7 +24,6 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-
             switch (currentState)
             {
                 case GameState::Menu:
@@ -93,22 +91,15 @@ int main()
 					break;
                 case GameState::Game:
                     game->handleMouseEvent(event);
-					if (event.type == sf::Event::KeyPressed)
-					{
-						switch (event.key.code)
-						{
-							case sf::Keyboard::Escape:
-								delete game;
-								game = nullptr;
-								currentState = GameState::Menu;
-
-                                // Recovering the window size
-                                window.setSize(sf::Vector2u(800, 600));
-                                sf::View view(sf::FloatRect(0, 0, 800, 600));
-                                window.setView(view);
-								break;
-						}
-					}
+                    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+                    {
+                        delete game;
+                        game = nullptr;
+                        currentState = GameState::Menu;
+                        window.setSize(sf::Vector2u(800, 600));
+                        sf::View view(sf::FloatRect(0, 0, 800, 600));
+                        window.setView(view);
+                    }
 					break;
             }
             

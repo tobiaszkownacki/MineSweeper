@@ -102,7 +102,7 @@ void CustomSettings::MoveLeft() noexcept
 {
 	switch (selectedItemIndex)
 	{
-		case 0: if (width > 1) width--; break;
+		case 0: if (width > 8) width--; break;
 		case 1: if (height > 1) height--; break;
 		case 2: if (mines > 1) mines--; break;
 	}
@@ -112,9 +112,9 @@ void CustomSettings::MoveRight() noexcept
 {
 	switch (selectedItemIndex)
 	{
-		case 0: width++; break;
-		case 1: height++; break;
-		case 2: mines++; break;
+	case 0: if (width < 45) width++; break;
+	case 1: if (height < 20) height++; break;
+	case 2: mines++; break;
 	}
 }
 
