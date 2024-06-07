@@ -4,7 +4,7 @@
 Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 	: width(width), height(height), mines(mines), window(window), board(width, height, mines)
 {
-	if (!font.loadFromFile("../arial.ttf"))
+	if (!font.loadFromFile("../PixelOperator8.ttf"))
 	{
 		std::cerr << "Error loading font\n";
 	}
@@ -59,6 +59,46 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 			sprites[i][j].setPosition(static_cast<float>(j * 40), static_cast<float>(100 + i * 40));
 		}
 	}
+
+	initializeText(FlagsLeft, "", 40, sf::Color::Red, sf::Vector2f(10.0f, 30.0f));
+	initializeText(Timer, "", 40, sf::Color::Red, sf::Vector2f(windowWidth - 115.0f, 30.0f));
+
+	updateFlagsLeft();
+
+}
+
+void Game::initializeText(sf::Text& text, const std::string& str, int size, sf::Color color, sf::Vector2f position) const noexcept
+{
+	text.setFont(font);
+	text.setString(str);
+	text.setCharacterSize(size);
+	text.setFillColor(color);
+	text.setPosition(position);
+}
+
+void Game::updateFlagsLeft() noexcept
+{
+	std::string zerosBeforeFlags = "";
+	if (board.getFlagsLeft() < 10)
+		zerosBeforeFlags = "00";
+	else if (board.getFlagsLeft() < 100)
+		zerosBeforeFlags = "0";
+
+	FlagsLeft.setString(zerosBeforeFlags + std::to_string(board.getFlagsLeft()));
+}
+
+void Game::updateClock() noexcept
+{
+	sf::Time elapsed = gameClock.getElapsedTime();
+	int seconds = static_cast<int>(elapsed.asSeconds());
+
+	std::string zerosBeforeTime = "";
+	if (seconds < 10)
+		zerosBeforeTime = "00";
+	else if (seconds < 100)
+		zerosBeforeTime = "0";
+
+	Timer.setString(zerosBeforeTime + std::to_string(seconds));
 }
 
 void Game::handleMouseEvent(sf::Event event)
@@ -81,6 +121,7 @@ void Game::handleMouseEvent(sf::Event event)
 			int x = event.mouseButton.x / 40;
 			int y = (event.mouseButton.y - 100) / 40;
 			rightClick(y, x);
+			updateFlagsLeft();
 		}
 	}
 
@@ -172,6 +213,10 @@ void Game::draw()
 			window.draw(sprites[i][j]);
 		}
 	}
+
+	updateClock();
+	window.draw(Timer);
+	window.draw(FlagsLeft);
 }
 
 bool Game::isGameOver() const noexcept

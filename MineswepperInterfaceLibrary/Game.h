@@ -8,7 +8,6 @@ class Game
 public:
 	Game(int width, int height, int mines, sf::RenderWindow& window);
 	~Game() = default;
-	//void initializeText(sf::Text& text, const std::string& str, int size, sf::Color color, sf::Vector2f position) const noexcept;
 	void handleMouseEvent(sf::Event event);
 	void draw();
 	bool isGameOver() const noexcept;
@@ -27,6 +26,9 @@ private:
 	void gameOver(int y, int x);
 	void wonGame(int y, int x);
 
+	void initializeText(sf::Text& text, const std::string& str, int size, sf::Color color, sf::Vector2f position) const noexcept;
+	void updateFlagsLeft() noexcept;
+
 	sf::RenderWindow& window;
 	Board board;
 
@@ -36,9 +38,9 @@ private:
 	sf::Font font;
 	sf::Text FlagsLeft;
 	sf::Text Timer;
-	sf::Text GameOver;
-	sf::Text GameWon;
+	sf::Clock gameClock;
 
-	
+	void updateClock() noexcept;
+	int seconds;
 };
 
