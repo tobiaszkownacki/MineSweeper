@@ -12,7 +12,7 @@ enum class GameState {
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Minesweeper Menu", sf::Style::Titlebar | sf::Style::Close);
-    Menu menu(window.getSize().x, window.getSize().y);
+    Menu menu(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y));
     CustomSettings customSettings(window.getSize().x, window.getSize().y);
     Game * game = nullptr;
 
@@ -24,9 +24,8 @@ int main()
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
-            {
                 window.close();
-            }
+
             switch (currentState)
             {
                 case GameState::Menu:
@@ -92,8 +91,25 @@ int main()
                         }
                     }
 					break;
-                // TODO case GameState::Game:
-                    // TODO Implement this!
+                case GameState::Game:
+                    game->handleMouseEvent(event);
+					if (event.type == sf::Event::KeyPressed)
+					{
+						switch (event.key.code)
+						{
+							case sf::Keyboard::Escape:
+								delete game;
+								game = nullptr;
+								currentState = GameState::Menu;
+
+                                // Recovering the window size
+                                window.setSize(sf::Vector2u(800, 600));
+                                sf::View view(sf::FloatRect(0, 0, 800, 600));
+                                window.setView(view);
+								break;
+						}
+					}
+					break;
             }
             
         }

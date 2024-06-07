@@ -37,10 +37,12 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 	if (!textures[12].loadFromFile("../images/flagMistake.png"))
 		std::cerr << "Error loading texture flagMistake\n";
 
-	window.setSize(sf::Vector2u(width * 40, 100 + height * 40));
+	windowWidth = static_cast<float>(width * 40);
+	windowHeight = static_cast<float>(100 + height * 40);
 
-	// Ustawienie widoku
-	sf::View view(sf::FloatRect(0, 0, static_cast<float>(width * 40), static_cast<float>(100 + height * 40)));
+    window.setSize(sf::Vector2u(static_cast<unsigned int>(windowWidth),
+		static_cast<unsigned int>(windowHeight)));
+	sf::View view(sf::FloatRect(0, 0, windowWidth, windowHeight));
 	window.setView(view);
 
 	sprites.resize(height);
@@ -55,6 +57,106 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 			sprites[i][j].setPosition(static_cast<float>(j * 40), static_cast<float>(100 + i * 40));
 		}
 	}
+}
+
+void Game::handleMouseEvent(sf::Event event)
+{
+	if (event.type == sf::Event::MouseButtonPressed)
+	{
+		if(event.mouseButton.y < 100 || event.mouseButton.y > windowHeight)
+			return;
+		if(event.mouseButton.x < 0 || event.mouseButton.x > windowWidth)
+			return;
+
+		if (event.mouseButton.button == sf::Mouse::Left)
+		{
+			int x = event.mouseButton.x / 40;
+			int y = (event.mouseButton.y - 100) / 40;
+			leftClick(y, x);
+		}
+		else if (event.mouseButton.button == sf::Mouse::Right)
+		{
+			int x = event.mouseButton.x / 40;
+			int y = (event.mouseButton.y - 100) / 40;
+			rightClick(y, x);
+		}
+	}
+
+}
+
+void Game::leftClick(int y, int x)
+{
+	std::cerr << board.getField(y, x).getAdjacentMines() << std::endl;
+	if(board.getField(y, x).IsFlagged())
+		return;
+	board.RevealField(y, x);
+
+	if (board.isGameWon())
+	{
+		wonGame();
+		return;
+	}
+		
+	else if (board.isGameLost())
+	{
+		gameOver();
+		return;
+	}
+
+	sprites[y][x].setTexture(textures[board.getField(y, x).getAdjacentMines()]);
+
+	for (int i = 0; i < height; ++i)
+	{
+		for (int j = 0; j < width; ++j)
+		{
+			Field field = board.getField(i, j);
+			int mines = field.getAdjacentMines();
+			if (!field.IsRevealed())
+				continue;
+			else
+				sprites[i][j].setTexture(textures[mines]);
+
+		}
+	}
+
+}
+
+void Game::rightClick(int y, int x)
+{
+	if (board.getField(y, x).IsRevealed())
+		return;
+
+	board.ToggleFlag(y, x);
+	if(board.getField(y, x).IsFlagged())
+		sprites[y][x].setTexture(textures[10]);
+	else
+		sprites[y][x].setTexture(textures[9]);
+}
+
+
+void Game::gameOver()
+{
+	std::cerr<< "Game Over\n";
+
+	// Reveal all mines and show mistakes
+	for (int i = 0; i < height; ++i)
+	{
+		for (int j = 0; j < width; ++j)
+		{
+			Field field = board.getField(i, j);
+			if (field.IsMine())
+				sprites[i][j].setTexture(textures[11]);
+			else if (field.IsFlagged() && !field.IsMine())
+				sprites[i][j].setTexture(textures[12]);
+		}
+	}
+}
+
+void Game::wonGame()
+{
+	// TODO
+	std::cerr << "Game Won\n";
+
 }
 
 void Game::draw()

@@ -127,8 +127,9 @@ void Board::RevealField(int y, int x) noexcept
 				field.setAdjacentMines(0);
 
 		CalculateAdjacentMines();
-		firstClick = false;
 	}
+
+	firstClick = false;
 
 
 	if (fields[y][x].IsMine())
