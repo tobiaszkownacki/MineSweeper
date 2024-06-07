@@ -39,6 +39,10 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 
 	window.setSize(sf::Vector2u(width * 40, 100 + height * 40));
 
+	// Ustawienie widoku
+	sf::View view(sf::FloatRect(0, 0, static_cast<float>(width * 40), static_cast<float>(100 + height * 40)));
+	window.setView(view);
+
 	sprites.resize(height);
 	for (int i = 0; i < height; ++i)
 	{
@@ -47,13 +51,8 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 		{
 			
 			sprites[i][j].setTexture(textures[9]);
+			sprites[i][j].setScale(1.0f, 1.0f);
 			sprites[i][j].setPosition(static_cast<float>(j * 40), static_cast<float>(100 + i * 40));
-			//sprites[i][j].setScale(1.3333f, 0.8f);
-			//auto scale = sprites[i][j].getScale();
-			//std::cerr << scale.x << " " << scale.y << std::endl;
-
-			//sf::FloatRect titleRect = sprites[i][j].getGlobalBounds();
-			//std::cerr << titleRect.left << " " << titleRect.top << " " << titleRect.width << " " << titleRect.height << std::endl;
 		}
 	}
 }
