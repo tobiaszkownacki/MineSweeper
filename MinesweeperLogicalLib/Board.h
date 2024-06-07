@@ -13,12 +13,15 @@ protected:
 	bool gameLost;
 	bool gameWon;
 
+	bool firstClick;
+
 	std::vector<std::vector<Field>> fields;
 
 	void GenerateMines() noexcept;	
 	void CalculateAdjacentMines() noexcept;
 	void RevealAdjacentFields(int y, int x) noexcept;
 	void RevealBombs() noexcept;
+	void TransportFirstClickedMine(int y, int x) noexcept;
 
 public:
 	Board(int width, int height, int mines) noexcept;

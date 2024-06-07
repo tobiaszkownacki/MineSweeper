@@ -10,6 +10,7 @@ Board::Board(int width, int height, int mines) noexcept
 	flagsLeft = mines;
 	gameLost = false;
 	gameWon = false;
+	firstClick = true;
 
 	fields = std::vector<std::vector<Field>>(height, std::vector<Field>(width));
 
@@ -113,6 +114,23 @@ void Board::RevealField(int y, int x) noexcept
 	if (fields[y][x].IsFlagged() || fields[y][x].IsRevealed())
 		return;
 
+
+	// If first click is a mine, move it to right corner
+	if (firstClick && fields[y][x].IsMine())
+	{
+		TransportFirstClickedMine(y, x);
+
+		fields[y][x].SetMine(false);
+		// zero out adjacent mines
+		for (auto& row : fields)
+			for (auto& field : row)
+				field.setAdjacentMines(0);
+
+		CalculateAdjacentMines();
+		firstClick = false;
+	}
+
+
 	if (fields[y][x].IsMine())
 	{
 		gameLost = true;
@@ -188,6 +206,19 @@ void Board::RevealBombs() noexcept
 				fields[y][x].Reveal();
 		}
 	}
+}
+
+void Board::TransportFirstClickedMine(int y, int x) noexcept
+{
+	for (int i = 0; i < height; ++i)
+		for (int j = width - 1; j >= 0; --j)
+		{
+			if (!fields[i][j].IsMine())
+			{
+				fields[i][j].SetMine();
+				return;
+			}
+		}
 }
 
 

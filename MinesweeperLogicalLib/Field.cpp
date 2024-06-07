@@ -14,6 +14,11 @@ bool Field::IsMine() const noexcept
 	return isMine;
 }
 
+void Field::SetMine(bool ismine) noexcept
+{
+	isMine = ismine;
+}
+
 void Field::SetMine() noexcept
 {
 	isMine = true;

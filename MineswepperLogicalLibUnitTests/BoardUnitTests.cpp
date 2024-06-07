@@ -220,7 +220,14 @@ namespace MockBoardUnitTest
 
 		EXPECT_FALSE(board.isGameLost());
 		board.RevealField(1, 1);
+
+		// because of the first click is a bomb, the bomb is moved to the right corner
+		EXPECT_FALSE(board.isGameLost());
+
+		EXPECT_TRUE(board.getField(0, 2).IsMine());
+		board.RevealField(0, 2);
 		EXPECT_TRUE(board.isGameLost());
+
 		EXPECT_TRUE(board.getField(2, 1).IsRevealed());
 	}
 
@@ -281,6 +288,95 @@ namespace MockBoardUnitTest
 		EXPECT_TRUE(board.isGameWon());
 	}
 
+	TEST(RevealField, FirstClick)
+	{
+		std::vector<std::vector<bool>> wherebomb = {
+			{false, false, false},
+			{false, true, false},
+			{false, true, false}
+		};
+		MockBoard board(3, 3, 2, wherebomb);
+
+		EXPECT_EQ(0, board.getRevealedFields());
+		board.RevealField(1, 1);
+		EXPECT_TRUE(board.getField(1, 1).IsRevealed());
+		EXPECT_TRUE(board.getField(0, 2).IsMine());
+
+		EXPECT_EQ(1, board.getRevealedFields());
+		EXPECT_EQ(2, board.getFlagsLeft());
+
+		// Check getAdjacentMines
+
+		EXPECT_EQ(0, board.getField(0, 0).getAdjacentMines());
+		EXPECT_EQ(1, board.getField(0, 1).getAdjacentMines());
+		EXPECT_EQ(0, board.getField(0, 2).getAdjacentMines());
+		EXPECT_EQ(1, board.getField(1, 0).getAdjacentMines());
+		EXPECT_EQ(2, board.getField(1, 1).getAdjacentMines());
+		EXPECT_EQ(2, board.getField(1, 2).getAdjacentMines());
+		EXPECT_EQ(1, board.getField(2, 0).getAdjacentMines());
+		EXPECT_EQ(0, board.getField(2, 1).getAdjacentMines());
+		EXPECT_EQ(1, board.getField(2, 2).getAdjacentMines());
+	}
+
+	TEST(RevealField, FirstClickRightCornerIsBusy)
+	{
+		std::vector<std::vector<bool>> wherebomb = {
+			{false, true, true},
+			{false, false, false},
+			{false, false, true}
+		};
+		MockBoard board(3, 3, 3, wherebomb);
+
+		EXPECT_EQ(0, board.getRevealedFields());
+		board.RevealField(2, 2);
+		EXPECT_TRUE(board.getField(2, 2).IsRevealed());
+		EXPECT_TRUE(board.getField(0, 0).IsMine());
+
+		EXPECT_EQ(6, board.getRevealedFields());
+		EXPECT_EQ(3, board.getFlagsLeft());
+
+		// Check getAdjacentMines
+
+		EXPECT_EQ(0, board.getField(0, 0).getAdjacentMines());
+		EXPECT_EQ(0, board.getField(0, 1).getAdjacentMines());
+		EXPECT_EQ(0, board.getField(0, 2).getAdjacentMines());
+		EXPECT_EQ(2, board.getField(1, 0).getAdjacentMines());
+		EXPECT_EQ(3, board.getField(1, 1).getAdjacentMines());
+		EXPECT_EQ(2, board.getField(1, 2).getAdjacentMines());
+		EXPECT_EQ(0, board.getField(2, 0).getAdjacentMines());
+		EXPECT_EQ(0, board.getField(2, 1).getAdjacentMines());
+		EXPECT_EQ(0, board.getField(2, 2).getAdjacentMines());
+	}
+
+	TEST(RevealField, FirstClickAllUpRowIsBusy)
+	{
+		std::vector<std::vector<bool>> wherebomb = {
+			{true, true, true},
+			{false, false, false},
+			{false, false, false}
+		};
+		MockBoard board(3, 3, 3, wherebomb);
+
+		EXPECT_EQ(0, board.getRevealedFields());
+		board.RevealField(0, 0);
+		EXPECT_TRUE(board.getField(0, 0).IsRevealed());
+		EXPECT_TRUE(board.getField(1, 2).IsMine());
+
+		EXPECT_EQ(1, board.getRevealedFields());
+		EXPECT_EQ(3, board.getFlagsLeft());
+
+		// Check getAdjacentMines
+
+		EXPECT_EQ(1, board.getField(0, 0).getAdjacentMines());
+		EXPECT_EQ(0, board.getField(0, 1).getAdjacentMines());
+		EXPECT_EQ(0, board.getField(0, 2).getAdjacentMines());
+		EXPECT_EQ(1, board.getField(1, 0).getAdjacentMines());
+		EXPECT_EQ(3, board.getField(1, 1).getAdjacentMines());
+		EXPECT_EQ(0, board.getField(1, 2).getAdjacentMines());
+		EXPECT_EQ(0, board.getField(2, 0).getAdjacentMines());
+		EXPECT_EQ(1, board.getField(2, 1).getAdjacentMines());
+		EXPECT_EQ(1, board.getField(2, 2).getAdjacentMines());
+	}
 	TEST(RevealAdjacentFields, typical)
 	{
 		std::vector<std::vector<bool>> wherebomb = {
