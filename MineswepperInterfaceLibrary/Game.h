@@ -35,6 +35,9 @@ private:
 	std::vector<sf::Texture> textures;
 	std::vector<std::vector<sf::Sprite>> sprites;
 
+	sf::Sprite smiley;
+	void resetBoard() noexcept;
+
 	sf::Font font;
 	sf::Text FlagsLeft;
 	sf::Text Timer;

@@ -9,7 +9,7 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 		std::cerr << "Error loading font\n";
 	}
 
-	textures.resize(14);
+	textures.resize(16);
 	if(!textures[0].loadFromFile("../images/zeroMinesNeighbour.png"))
 		std::cerr << "Error loading texture zero\n";
 	if (!textures[1].loadFromFile("../images/oneMineNeighbour.png"))
@@ -38,6 +38,10 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 		std::cerr << "Error loading texture flagMistake\n";
 	if (!textures[13].loadFromFile("../images/clickedMine.png"))
 		std::cerr << "Error loading texture clickedMine.png\n";
+	if (!textures[14].loadFromFile("../images/happyFace.png"))
+		std::cerr << "Error loading texture happyFace.png\n";
+	if (!textures[15].loadFromFile("../images/faceWithGlasses.png"))
+		std::cerr << "Error loading texture faceWithGlasses.png\n";
 
 	windowWidth = static_cast<float>(width * 40);
 	windowHeight = static_cast<float>(100 + height * 40);
@@ -55,7 +59,6 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 		{
 			
 			sprites[i][j].setTexture(textures[9]);
-			sprites[i][j].setScale(1.0f, 1.0f);
 			sprites[i][j].setPosition(static_cast<float>(j * 40), static_cast<float>(100 + i * 40));
 		}
 	}
@@ -64,6 +67,9 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 	initializeText(Timer, "", 40, sf::Color::Red, sf::Vector2f(windowWidth - 115.0f, 30.0f));
 
 	updateFlagsLeft();
+
+	smiley.setTexture(textures[14]);
+	smiley.setPosition(windowWidth / 2.0f - 30.0f, 30.0f);
 
 }
 
@@ -98,13 +104,27 @@ void Game::updateClock() noexcept
 	else if (seconds < 100)
 		zerosBeforeTime = "0";
 
-	Timer.setString(zerosBeforeTime + std::to_string(seconds));
+	// If game is lost or won, stop the timer
+	if (!board.isGameLost() && !board.isGameWon())
+		Timer.setString(zerosBeforeTime + std::to_string(seconds));
 }
 
 void Game::handleMouseEvent(sf::Event event)
 {
 	if (event.type == sf::Event::MouseButtonPressed)
 	{
+		// check if smiley was clicked
+		sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+		sf::Vector2f mouseWorldPos = window.mapPixelToCoords(mousePos);
+
+		// Check if the sprite was clicked
+		if (smiley.getGlobalBounds().contains(mouseWorldPos))
+			resetBoard();
+
+		// If game is lost or won, do not handle mouse events
+		if(board.isGameLost() || board.isGameWon())
+			return;
+
 		if(event.mouseButton.y < 100 || event.mouseButton.y > windowHeight)
 			return;
 		if(event.mouseButton.x < 0 || event.mouseButton.x > windowWidth)
@@ -129,7 +149,6 @@ void Game::handleMouseEvent(sf::Event event)
 
 void Game::leftClick(int y, int x)
 {
-	std::cerr << board.getField(y, x).getAdjacentMines() << std::endl;
 	if(board.getField(y, x).IsFlagged())
 		return;
 	board.RevealField(y, x);
@@ -200,7 +219,7 @@ void Game::wonGame(int y, int x)
 {
 	sprites[y][x].setTexture(textures[board.getField(y, x).getAdjacentMines()]);
 	board.RevealField(y, x);
-	std::cerr << "Game Won\n";
+	smiley.setTexture(textures[15]);
 
 }
 
@@ -217,7 +236,24 @@ void Game::draw()
 	updateClock();
 	window.draw(Timer);
 	window.draw(FlagsLeft);
+	window.draw(smiley);
 }
+
+void Game::resetBoard() noexcept
+{
+	board = Board(width, height, mines);
+	gameClock.restart();
+	for (int i = 0; i < height; ++i)
+	{
+		for (int j = 0; j < width; ++j)
+		{
+			sprites[i][j].setTexture(textures[9]);
+		}
+	}
+	updateFlagsLeft();
+}
+
+
 
 bool Game::isGameOver() const noexcept
 {
