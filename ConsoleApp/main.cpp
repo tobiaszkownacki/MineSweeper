@@ -114,6 +114,10 @@ int main()
             }
             
         }
+        if(currentState == GameState::Game)
+            backgroundColor = sf::Color(192, 192, 192);
+        else
+            backgroundColor = sf::Color(237, 232, 215);
         window.clear(backgroundColor);
         switch (currentState)
         {
