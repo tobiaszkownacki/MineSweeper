@@ -10,8 +10,6 @@ public:
 	~Game() = default;
 	void handleMouseEvent(sf::Event event);
 	void draw();
-	bool isGameOver() const noexcept;
-	bool isGameWon() const noexcept;
 private:
 	int width;
 	int height;
@@ -34,6 +32,7 @@ private:
 	sf::Text FlagsLeft;
 	sf::Text Timer;
 	sf::Clock gameClock;
+	bool gameStarted;
 	void updateClock() noexcept;
 	int seconds;
 };

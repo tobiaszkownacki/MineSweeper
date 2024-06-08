@@ -61,10 +61,11 @@ Game::Game(int width, int height, int mines, sf::RenderWindow& window)
 		}
 	}
 	initializeText(FlagsLeft, "", 40, sf::Color::Red, sf::Vector2f(10.0f, 30.0f));
-	initializeText(Timer, "", 40, sf::Color::Red, sf::Vector2f(windowWidth - 115.0f, 30.0f));
 	updateFlagsLeft();
+	initializeText(Timer, "000", 40, sf::Color::Red, sf::Vector2f(windowWidth - 115.0f, 30.0f));
 	smiley.setTexture(textures[14]);
 	smiley.setPosition(windowWidth / 2.0f - 30.0f, 30.0f);
+	gameStarted = false;
 }
 
 void Game::initializeText(sf::Text& text, const std::string& str, int size, sf::Color color, sf::Vector2f position) const noexcept
@@ -113,6 +114,11 @@ void Game::handleMouseEvent(sf::Event event)
 			return;
 		if(event.mouseButton.x < 0 || event.mouseButton.x > windowWidth)
 			return;
+		if (!gameStarted)
+		{
+			gameClock.restart();
+			gameStarted = true;
+		}
 		if (event.mouseButton.button == sf::Mouse::Left)
 		{
 			int x = event.mouseButton.x / 40;
@@ -222,7 +228,8 @@ void Game::draw()
 			window.draw(sprites[i][j]);
 		}
 	}
-	updateClock();
+	if (gameStarted)
+		updateClock();
 	window.draw(Timer);
 	window.draw(FlagsLeft);
 	window.draw(smiley);
@@ -241,16 +248,6 @@ void Game::resetBoard() noexcept
 		}
 	}
 	updateFlagsLeft();
-}
-
-
-
-bool Game::isGameOver() const noexcept
-{
-	return board.isGameLost();
-}
-
-bool Game::isGameWon() const noexcept
-{
-	return board.isGameWon();
+	gameStarted = false;
+	Timer.setString("000");
 }

@@ -31,10 +31,9 @@ void Board::GenerateMines(int y, int x) noexcept
 		{
 			if (std::abs(y - bomb_y) <= 1 && std::abs(x - bomb_x) <= 1)
 				continue;
-		} else {
-			if (y == bomb_y && x == bomb_x)
+		} 
+		else if (y == bomb_y && x == bomb_x)
 				continue;
-		}
 		if (!fields[bomb_y][bomb_x].IsMine())
 		{
 			fields[bomb_y][bomb_x].SetMine();

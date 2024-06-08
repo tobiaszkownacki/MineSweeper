@@ -6,7 +6,6 @@ class Field
 		~Field() noexcept = default;
 		bool IsMine() const noexcept;
 		void SetMine() noexcept;
-		void SetMine(bool ismine) noexcept;
 		bool IsFlagged() const noexcept;
 		void ToggleFlag() noexcept;
 		bool IsRevealed() const noexcept;

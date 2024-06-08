@@ -14,11 +14,6 @@ bool Field::IsMine() const noexcept
 	return isMine;
 }
 
-void Field::SetMine(bool ismine) noexcept
-{
-	isMine = ismine;
-}
-
 void Field::SetMine() noexcept
 {
 	isMine = true;
@@ -41,9 +36,8 @@ bool Field::IsRevealed() const noexcept
 
 void Field::Reveal() noexcept
 {
-	if (isRevealed == false) {
+	if (!isRevealed)
 		isRevealed = true;
-	}
 }
 
 int Field::getAdjacentMines() noexcept
