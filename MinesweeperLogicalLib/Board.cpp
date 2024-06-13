@@ -1,5 +1,6 @@
 #include "Board.h"
 #include <random>
+#include <cmath>
 
 Board::Board(int width, int height, int mines) noexcept
 {
@@ -10,33 +11,37 @@ Board::Board(int width, int height, int mines) noexcept
 	flagsLeft = mines;
 	gameLost = false;
 	gameWon = false;
-
+	generatedMines = false;
 	fields = std::vector<std::vector<Field>>(height, std::vector<Field>(width));
-
-	GenerateMines();
-	CalculateAdjacentMines();
 }
 
-void Board::GenerateMines() noexcept
+void Board::GenerateMines(int y, int x) noexcept
 {
 	std::random_device device;
 	std::mt19937 generator(device());
-
 	std::uniform_int_distribution<int> distY(0, height - 1);
 	std::uniform_int_distribution<int> distX(0, width - 1);
-
 	int minesToPlace = mines;
+	int totalFields = width * height;
 	while(minesToPlace > 0)
 	{
-		int x = distX(generator);
-		int y = distY(generator);
-
-		if (!fields[y][x].IsMine())
+		int bomb_x = distX(generator);
+		int bomb_y = distY(generator);
+		if (totalFields - mines >= 9)
 		{
-			fields[y][x].SetMine();
+			if (std::abs(y - bomb_y) <= 1 && std::abs(x - bomb_x) <= 1)
+				continue;
+		} 
+		else if (y == bomb_y && x == bomb_x)
+				continue;
+		if (!fields[bomb_y][bomb_x].IsMine())
+		{
+			fields[bomb_y][bomb_x].SetMine();
 			--minesToPlace;
 		}
 	}
+	CalculateAdjacentMines();
+	generatedMines = true;
 }
 
 void Board::CalculateAdjacentMines() noexcept
@@ -47,14 +52,10 @@ void Board::CalculateAdjacentMines() noexcept
 		{
 			if (!fields[y][x].IsMine())
 				continue;
-
-			// Calculate the range of neighboring cells
 			int topY = std::max(0, y - 1);
 			int downY = std::min(height - 1, y + 1);
 			int leftX = std::max(0, x - 1);
 			int rightX = std::min(width - 1, x + 1);
-
-			// Increment adjacent mines for each neighboring cell
 			for (int i = topY; i <= downY; ++i)
 			{
 				for (int j = leftX; j <= rightX; ++j)
@@ -112,40 +113,36 @@ void Board::RevealField(int y, int x) noexcept
 {
 	if (fields[y][x].IsFlagged() || fields[y][x].IsRevealed())
 		return;
-
+	if (!generatedMines)
+	{
+		GenerateMines(y, x);
+	}
 	if (fields[y][x].IsMine())
 	{
 		gameLost = true;
 		RevealBombs();
 		return;
 	}
-
 	fields[y][x].Reveal();
 	++revealedFields;
-
 	if (fields[y][x].getAdjacentMines() == 0)
 		RevealAdjacentFields(y, x);
-
 	if (revealedFields == width * height - mines)
 		gameWon = true;
 }
 
 void Board::RevealAdjacentFields(int y, int x) noexcept
 {
-	// Calculate the range of neighboring cells
 	int topY = std::max(0, y - 1);
 	int downY = std::min(height - 1, y + 1);
 	int leftX = std::max(0, x - 1);
 	int rightX = std::min(width - 1, x + 1);
-
 	for (int i = topY; i <= downY; ++i)
 	{
 		for (int j = leftX; j <= rightX; ++j)
 		{
 			if (fields[i][j].IsRevealed())
 				continue;
-
-			// unflag the field if it has no adjacent mines
 			if (fields[i][j].IsFlagged() && fields[i][j].getAdjacentMines() == 0)
 			{
 				fields[i][j].ToggleFlag();
@@ -153,10 +150,8 @@ void Board::RevealAdjacentFields(int y, int x) noexcept
 			}
 			else if (fields[i][j].IsFlagged())
 				continue;
-
 			fields[i][j].Reveal();
 			++revealedFields;
-
 			if (fields[i][j].getAdjacentMines() == 0)
 				RevealAdjacentFields(i, j);
 		}
@@ -167,10 +162,8 @@ void Board::ToggleFlag(int y, int x) noexcept
 {
 	if (fields[y][x].IsRevealed())
 		return;
-
 	if (flagsLeft == 0 && !fields[y][x].IsFlagged())
 		return;
-
 	fields[y][x].ToggleFlag();
 	if (fields[y][x].IsFlagged())
 		--flagsLeft;
@@ -189,5 +182,3 @@ void Board::RevealBombs() noexcept
 		}
 	}
 }
-
-

@@ -1,18 +1,20 @@
-#include "../MineswepperMenuLibrary/Menu.h"
-#include "../MineswepperMenuLibrary/CustomSettings.h"
+#include "../MineswepperInterfaceLibrary/Menu.h"
+#include "../MineswepperInterfaceLibrary/CustomSettings.h"
+#include "../MineswepperInterfaceLibrary/Game.h"
 #include <iostream>
 
 enum class GameState {
 	Menu,
-	CustomSettings
-    // TODO Game
+	CustomSettings,
+    Game
 };
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Minesweeper Menu", sf::Style::Titlebar | sf::Style::Close);
-    Menu menu(window.getSize().x, window.getSize().y);
+    Menu menu(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y));
     CustomSettings customSettings(window.getSize().x, window.getSize().y);
+    Game * game = nullptr;
     GameState currentState = GameState::Menu;
     sf::Color backgroundColor = sf::Color(237, 232, 215);
     while (window.isOpen())
@@ -21,9 +23,7 @@ int main()
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
-            {
                 window.close();
-            }
             switch (currentState)
             {
                 case GameState::Menu:
@@ -38,19 +38,16 @@ int main()
                                 switch (selectedItem)
                                 {
                                 case 0:
-                                    std::cout << "Easy | Width: 9 | Height: 9 | Bombs: 10" << std::endl;
-                                    // TODO game = new Game(9, 9, 10);
-                                    // TODO currentState = GameState::Game;
+                                    game = new Game(9, 9, 10, window);
+                                    currentState = GameState::Game;
                                     break;
                                 case 1:
-                                    std::cout << "Medium | Width: 16 | Height: 16 | Bombs: 40" << std::endl;
-                                    // TODO game = new Game(16, 16, 40);
-                                    // TODO currentState = GameState::Game;
+                                    game = new Game(16, 16, 40, window);
+                                    currentState = GameState::Game;
                                     break;
                                 case 2:
-                                    std::cout << "Extreme | Width: 30 | Height: 16 | Bombs: 99" << std::endl;
-                                    // TODO game = new Game(30, 16, 99);
-                                    // TODO currentState = GameState::Game;
+                                    game = new Game(30, 16, 99, window);
+                                    currentState = GameState::Game;
                                     break;
                                 case 3:
                                     currentState = GameState::CustomSettings;
@@ -77,9 +74,8 @@ int main()
                                 int customMines = customSettings.getMines();
                                 if (customMines < customWidth * customHeight)
                                 {
-                                    std::cout << "Custom | Width: " << customWidth << " | Height: " << customHeight << " | Bombs: " << customMines << std::endl;
-                                    // TODO game = new Game(customWidth, customHeight, customMines);
-                                    // TODO currentState = GameState::Game;
+                                    game = new Game(customWidth, customHeight, customMines, window);
+                                    currentState = GameState::Game;
                                 }
                                 break;
                             }
@@ -89,11 +85,25 @@ int main()
                         }
                     }
 					break;
-                // TODO case GameState::Game:
-                    // TODO Implement this!
+                case GameState::Game:
+                    game->handleMouseEvent(event);
+                    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+                    {
+                        delete game;
+                        game = nullptr;
+                        currentState = GameState::Menu;
+                        window.setSize(sf::Vector2u(800, 600));
+                        sf::View view(sf::FloatRect(0, 0, 800, 600));
+                        window.setView(view);
+                    }
+					break;
             }
             
         }
+        if(currentState == GameState::Game)
+            backgroundColor = sf::Color(192, 192, 192);
+        else
+            backgroundColor = sf::Color(237, 232, 215);
         window.clear(backgroundColor);
         switch (currentState)
         {
@@ -103,8 +113,9 @@ int main()
             case GameState::CustomSettings:
 			    customSettings.draw(window);
                 break;
-            // TODO case GameState::Game:
-				// TODO Implement this!
+            case GameState::Game:
+				game->draw();
+                break;
         }
         window.display();
     }

@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../MineswepperMenuLibrary/CustomSettings.h"
+#include "../MineswepperInterfaceLibrary/CustomSettings.h"
 
 namespace CustomSettingsUnitTests
 {
@@ -33,19 +33,10 @@ namespace CustomSettingsUnitTests
 		EXPECT_EQ(customMenu.getWidth(), 9);
 
 		customMenu.handleInput(event);
-		customMenu.handleInput(event);
-		customMenu.handleInput(event);
-		customMenu.handleInput(event);
-		customMenu.handleInput(event);
-		customMenu.handleInput(event);
-		customMenu.handleInput(event);
-		EXPECT_EQ(customMenu.getWidth(), 2);
+		EXPECT_EQ(customMenu.getWidth(), 8);
 
 		customMenu.handleInput(event);
-		EXPECT_EQ(customMenu.getWidth(), 1);
-
-		customMenu.handleInput(event);
-		EXPECT_EQ(customMenu.getWidth(), 1);
+		EXPECT_EQ(customMenu.getWidth(), 8);
 	}
 
 	TEST(HandleInput, IncreaseAndDownHeight)

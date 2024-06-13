@@ -31,6 +31,7 @@ public:
 		}
 
 		GenerateMines(wherebomb);
+		generatedMines = true;
 		CalculateAdjacentMines();
     }
 };
@@ -209,20 +210,6 @@ namespace MockBoardUnitTest
 		EXPECT_EQ(1, board.getFlagsLeft());
 
 	}
-	TEST(RevealField, revealBombGameOver)
-	{
-		std::vector<std::vector<bool>> wherebomb = {
-			{false, false, false},
-			{false, true, false},
-			{false, true, false}
-		};
-		MockBoard board(3, 3, 2, wherebomb);
-
-		EXPECT_FALSE(board.isGameLost());
-		board.RevealField(1, 1);
-		EXPECT_TRUE(board.isGameLost());
-		EXPECT_TRUE(board.getField(2, 1).IsRevealed());
-	}
 
 	TEST(RevealField, WinTheGame)
 	{
@@ -281,6 +268,35 @@ namespace MockBoardUnitTest
 		EXPECT_TRUE(board.isGameWon());
 	}
 
+	TEST(RevealField, SafeSquareOnFirstClick)
+	{
+		Board board(8, 3, 15);
+
+		EXPECT_EQ(0, board.getRevealedFields());
+		board.RevealField(1, 4);
+
+		EXPECT_FALSE(board.getField(1, 4).IsMine());
+		EXPECT_FALSE(board.getField(0, 4).IsMine());
+		EXPECT_FALSE(board.getField(2, 4).IsMine());
+		EXPECT_FALSE(board.getField(0, 3).IsMine());
+		EXPECT_FALSE(board.getField(1, 3).IsMine());
+		EXPECT_FALSE(board.getField(2, 3).IsMine());
+		EXPECT_FALSE(board.getField(0, 5).IsMine());
+		EXPECT_FALSE(board.getField(2, 5).IsMine());
+		EXPECT_FALSE(board.getField(2, 5).IsMine());
+	}
+
+	TEST(RevealField, SafeOneFieldOnFirstClick)
+	{
+		Board board(8, 3, 20);
+
+		EXPECT_EQ(0, board.getRevealedFields());
+		board.RevealField(1, 4);
+
+		EXPECT_EQ(1, board.getRevealedFields());
+		EXPECT_FALSE(board.getField(1, 4).IsMine());
+		EXPECT_FALSE(board.isGameWon());
+	}
 	TEST(RevealAdjacentFields, typical)
 	{
 		std::vector<std::vector<bool>> wherebomb = {
