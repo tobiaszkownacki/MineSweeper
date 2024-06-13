@@ -217,6 +217,8 @@ void Game::wonGame(int y, int x)
 		}
 	}
 	smiley.setTexture(textures[15]);
+	board.flagsLeft = 0;
+	updateFlagsLeft();
 }
 
 void Game::draw()

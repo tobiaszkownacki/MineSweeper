@@ -38,17 +38,14 @@ int main()
                                 switch (selectedItem)
                                 {
                                 case 0:
-                                    std::cout << "Easy | Width: 9 | Height: 9 | Bombs: 10" << std::endl;
                                     game = new Game(9, 9, 10, window);
                                     currentState = GameState::Game;
                                     break;
                                 case 1:
-                                    std::cout << "Medium | Width: 16 | Height: 16 | Bombs: 40" << std::endl;
                                     game = new Game(16, 16, 40, window);
                                     currentState = GameState::Game;
                                     break;
                                 case 2:
-                                    std::cout << "Extreme | Width: 30 | Height: 16 | Bombs: 99" << std::endl;
                                     game = new Game(30, 16, 99, window);
                                     currentState = GameState::Game;
                                     break;
@@ -77,7 +74,6 @@ int main()
                                 int customMines = customSettings.getMines();
                                 if (customMines < customWidth * customHeight)
                                 {
-                                    std::cout << "Custom | Width: " << customWidth << " | Height: " << customHeight << " | Bombs: " << customMines << std::endl;
                                     game = new Game(customWidth, customHeight, customMines, window);
                                     currentState = GameState::Game;
                                 }
