@@ -140,10 +140,6 @@ void Game::leftClick(int y, int x)
 {
 	if(board.getField(y, x).IsFlagged())
 		return;
-	if (!board.generatedMines)
-	{
-		board.GenerateMines(y, x);
-	}
 	board.RevealField(y, x);
 	if (board.isGameWon())
 	{

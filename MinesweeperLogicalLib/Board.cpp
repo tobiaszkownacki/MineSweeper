@@ -113,6 +113,10 @@ void Board::RevealField(int y, int x) noexcept
 {
 	if (fields[y][x].IsFlagged() || fields[y][x].IsRevealed())
 		return;
+	if (!generatedMines)
+	{
+		GenerateMines(y, x);
+	}
 	if (fields[y][x].IsMine())
 	{
 		gameLost = true;
