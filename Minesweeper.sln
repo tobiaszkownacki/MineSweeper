@@ -11,7 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MineswepperLogicalLibUnitTe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MineswepperInterfaceUnitTests", "MineswepperInterfaceUnitTests\MineswepperInterfaceUnitTests.vcxproj", "{00118433-F000-4626-AF0F-CAF7D64231B0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MineswepperMenuLibrary", "MineswepperMenuLibrary\MineswepperMenuLibrary.vcxproj", "{80CCBF52-412B-4342-A814-4C0FF2FD0C1D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MineswepperInterfaceLibrary", "MineswepperInterfaceLibrary\MineswepperMenuLibrary.vcxproj", "{80CCBF52-412B-4342-A814-4C0FF2FD0C1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

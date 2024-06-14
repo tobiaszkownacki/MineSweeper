@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../MineswepperMenuLibrary/Menu.h"
+#include "../MineswepperInterfaceLibrary/Menu.h"
 
 namespace MenuUnitTests
 {
