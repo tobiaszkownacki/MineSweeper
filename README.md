@@ -1,64 +1,75 @@
 # Minesweeper
 
-## Opis projektu
+## Project Description
 
-Minesweeper to klasyczna gra logiczna, w której gracz musi odkryć wszystkie pola na planszy, które nie zawierają min. Gra została napisana w języku C++ z wykorzystaniem biblioteki SFML do obsługi grafiki i zdarzeń.
+Minesweeper is a classic logic game where the player must uncover all the tiles on the board that do not contain mines. The game is written in C++ using the SFML library for handling graphics and events.
 
-## Wymagania systemowe
+## System Requirements
 
-- Kompilator C++
-- Biblioteka SFML (wersja 2.6.1 lub nowsza)
+- C++ Compiler
+- SFML library (version 2.6.1 or newer)
 
-## Funkcjonalności
+## Features
 
-- **Menu główne**: Pozwala na wybór poziomu trudności (łatwy, średni, ekstremalny, niestandardowy).
-- **Gra**: Odkrywanie pól, oznaczanie min flagami, resetowanie gry.
-- **Ustawienia niestandardowe**: Umożliwia użytkownikowi wybór szerokości, wysokości i liczby min na planszy.
+- **Main Menu**: Allows selecting the difficulty level (easy, medium, extreme, custom).
+- **Gameplay**: Uncovering tiles, marking mines with flags, and resetting the game.
+- **Custom Settings**: Allows the user to define the board width, height, and number of mines.
 
-## Dlaczego taka dekompozycja?
+## Why This Decomposition?
 
-Projekt został podzielony na klasy `Game`, `Board`, `Field`, `Menu`, oraz `CustomSettings` dla lepszej organizacji kodu i łatwiejszego zarządzania funkcjonalnościami gry:
+The project is divided into the following classes: `Game`, `Board`, `Field`, `Menu`, and `CustomSettings` to improve code organization and manage game functionality more efficiently:
 
-- **Game**: Obsługa głównej logiki gry, interakcji z użytkownikiem i renderowania. Klasa ta zarządza również interakcjami z użytkownikiem, takimi jak kliknięcia myszką i aktualizacje stanu gry.
-- **Board**: Reprezentacja planszy do gry, zarządzanie minami i stanami pól. Klasa ta przechowuje stan każdej komórki na planszy i zarządza generowaniem min oraz obliczaniem liczby sąsiadujących min.
-- **Field**: Reprezentacja pojedynczego pola na planszy, przechowywanie informacji o stanie pola (mina, flaga, odkryte). Klasa ta jest odpowiedzialna za przechowywanie informacji o tym, czy pole zawiera minę, jest oznaczone flagą, czy zostało odkryte, a także liczby sąsiadujących min.
-- **Menu**: Interfejs użytkownika do wyboru ustawień gry. Klasa ta zarządza wyświetlaniem menu głównego i obsługą wyboru poziomu trudności przez użytkownika.
-- **CustomSettings**: Interfejs do definiowania niestandardowych ustawień gry. Klasa ta pozwala użytkownikowi na wprowadzenie własnych ustawień gry, takich jak szerokość, wysokość planszy oraz liczba min.
+- **Game**: Handles the main game logic, user interaction, and rendering. This class also manages user inputs like mouse clicks and updates the game state.
+- **Board**: Represents the game board, manages mines, and tracks tile states. It stores the state of each cell, handles mine generation, and calculates the number of adjacent mines.
+- **Field**: Represents a single tile on the board, storing information about its state (mine, flag, uncovered). It tracks whether a tile contains a mine, is flagged, is uncovered, and the number of adjacent mines.
+- **Menu**: Provides the user interface for selecting game settings. It handles the display of the main menu and processes the user's difficulty selection.
+- **CustomSettings**: Allows users to define custom game settings. It provides options for the board's width, height, and number of mines.
 
-## Logika obliczeniowa
+## Computational Logic
 
-### Klasa `Board`
+### `Board` Class
 
-#### Najważeniejsze metody:
+#### Key Methods:
 
-- **void RevealField(int y, int x) noexcept**: Ta metoda odkrywa pole na podanych współrzędnych. Jeśli pole zawiera minę, ustawia stan gry jako przegrany i odkrywa wszystkie miny. Jeśli pole nie ma sąsiadujących min, rekurencyjnie odkrywa sąsiadujące pola.
-- **void GenerateMines(int y, int x) noexcept**: Ta metoda losowo rozmieszcza miny na planszy, unikając umieszczenia min w sąsiedztwie pierwszego kliknięcia, aby zapewnić graczowi bezpieczny start.
-- **void CalculateAdjacentMines() noexcept**: Ta metoda oblicza liczbę min sąsiadujących z każdym polem na planszy, iterując przez wszystkie pola i zwiększając licznik sąsiadujących min dla pól wokół min.
-- **void RevealAdjacentFields(int y, int x) noexcept**: Ta metoda odkrywa sąsiadujące pola dla pola o współrzędnych (y, x), które nie mają sąsiadujących min. Działa rekurencyjnie, aby odkrywać wszystkie połączone pola bez sąsiadujących min.
-- **void RevealBombs() noexcept**: Ta metoda odkrywa wszystkie miny na planszy, zwykle wywoływana po przegranej grze, aby pokazać graczowi, gdzie były ukryte miny.
+- **void RevealField(int y, int x) noexcept**: Reveals the tile at the given coordinates. If the tile contains a mine, the game is marked as lost and all mines are revealed. If the tile has no adjacent mines, neighboring tiles are revealed recursively.
 
-### Klasa `Game`
+- **void GenerateMines(int y, int x) noexcept**: Randomly places mines on the board while avoiding the area around the first click to ensure a safe start for the player.
 
-Klasa `Game` działa na dwóch wektorach: jednym logicznym, zawartym w klasie `Board`, oraz drugim graficznym, przechowującym obiekty odpowiadające za warstwę graficzną.
+- **void CalculateAdjacentMines() noexcept**: Calculates the number of adjacent mines for each tile by iterating through the board and incrementing mine counters for neighboring cells.
 
-#### Najważniejsze metody:
+- **void RevealAdjacentFields(int y, int x) noexcept**: Recursively reveals neighboring tiles for a tile with no adjacent mines.
 
-- **void handleMouseEvent(sf::Event event)**: Ta metoda obsługuje zdarzenia związane z myszką, takie jak kliknięcia. Sprawdza, które pole zostało kliknięte, i wywołuje odpowiednie akcje, takie jak odkrywanie pola lub oznaczanie flagą.
-- **void draw()**: Ta metoda rysuje wszystkie elementy gry na ekranie, w tym planszę, licznik pozostałych flag, licznik czasu i emotikona stanu gry.
-- **void leftClick(int y, int x)**: Ta metoda obsługuje lewoklik myszki na polu o współrzędnych (y, x). Odkrywa pole, a jeśli jest to pierwsze kliknięcie, generuje miny na planszy.
-- **void rightClick(int y, int x)**: Ta metoda obsługuje prawoklik myszki na polu o współrzędnych (y, x), oznaczając pole flagą lub usuwając flagę.
-- **void gameOver(int y, int x)**: Ta metoda ustawia stan gry jako przegrany, odkrywa wszystkie miny i oznacza niepoprawnie oznaczone flagi, a także ustawia odpowiednią grafikę dla pola klikniętego jako ostatnie.
-- **void wonGame(int y, int x)**: Ta metoda ustawia stan gry jako wygrany, oznacza wszystkie miny flagami i zmienia emotikonę stanu gry na "wygrana".
+- **void RevealBombs() noexcept**: Reveals all mines on the board, usually triggered when the game is lost to show the player the mine locations.
 
-## Testy jednostkowe
+### `Game` Class
 
-Projekt zawiera testy jednostkowe zaimplementowane przy użyciu biblioteki Google Test. Testy obejmują:
+The `Game` class operates on two vectors: a logical one stored in the `Board` class and a graphical one responsible for rendering.
 
-- Konstruktor klasy `CustomSettings`.
-- Obsługę wejścia dla klasy `CustomSettings`.
-- Konstruktor klasy `Menu`.
-- Obsługę wejścia dla klasy `Menu`.
+#### Key Methods:
 
-## Autorzy
+- **void handleMouseEvent(sf::Event event)**: Processes mouse events such as clicks, identifies which tile was clicked, and performs the corresponding actions (e.g., uncovering a tile or placing a flag).
 
-Projekt został stworzony przez Adriana Garbowskiego oraz Tobiasza Kownackiego w ramach projektu na przedmiot Programowanie Obiektowe.
+- **void draw()**: Renders all game elements, including the board, flag counter, timer, and the game state emoji.
+
+- **void leftClick(int y, int x)**: Handles left mouse clicks on a tile at coordinates (y, x). It uncovers the tile and, if it's the first click, triggers mine generation.
+
+- **void rightClick(int y, int x)**: Handles right mouse clicks on a tile at coordinates (y, x), toggling a flag on or off.
+
+- **void gameOver(int y, int x)**: Marks the game as lost, reveals all mines, and displays incorrectly flagged tiles. It also updates the emoji to indicate the player lost.
+
+- **void wonGame(int y, int x)**: Marks the game as won, places flags on all mines, and updates the emoji to a winning face.
+
+## Unit Testing
+
+The project includes unit tests implemented using the Google Test framework. The tests cover:
+
+- The `CustomSettings` class constructor.
+- Input handling for the `CustomSettings` class.
+- The `Menu` class constructor.
+- Input handling for the `Menu` class.
+
+## Authors
+
+The project was created by Adrian Garbowski (@AdrianeQQ) and Tobiasz Kownacki as part of the Object-Oriented Programming course.
+
+
